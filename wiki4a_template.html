@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f1419">
+<title>策略说明 · 永久资产配置</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#ffffff;--bg2:#f8fafc;
+  --txt:#061b31;--medium:#5b6b7f;--mut:#8494a7;--light:#a9b7c6;
+  --line:#e5edf5;--line2:#f1f5f9;
+  --primary:#533afd;--link:#533afd;--blue:#4287ce;--red:#e05046;--green:#2eb88a;--gold:#c9a05a;--purple:#7a5fd0;--orange:#e5881e;
+  --radius:6px;
+  --shadow-sm:rgba(50,50,93,.06) 0px 3px 8px;
+  --shadow-md:rgba(50,50,93,.09) 0px 18px 38px -18px, rgba(0,0,0,.06) 0px 8px 16px -8px;
+  --shadow-lg:rgba(50,50,93,.14) 0px 30px 45px -30px, rgba(0,0,0,.1) 0px 18px 36px -18px;
+}
+html{font-size:16px;scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--txt);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Noto Sans SC",Arial,sans-serif;
+  font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  min-width:320px;
+  transition:background .3s ease,color .3s ease;
+}
+.num{font-variant-numeric:tabular-nums}
+a{color:var(--link);text-decoration:none;transition:color .15s}
+a:hover{color:#4434d4;text-decoration:underline}
+
+.wrap{max-width:680px;margin:0 auto;padding:24px 20px 80px}
+
+/* ===== Header ===== */
+.header{padding:8px 0 24px;border-bottom:1px solid var(--line);margin-bottom:28px}
+.header-row{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}
+.header h1{font-size:21px;font-weight:700;color:var(--txt);margin-bottom:4px;letter-spacing:.01em;background:linear-gradient(120deg,var(--txt) 55%,#2b4a6f);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;display:inline-block}
+.header p{font-size:13px;color:var(--mut);line-height:22px}
+.header .nav{margin-top:10px}
+.header .nav a{font-size:13px;color:var(--link)}
+.theme-btn{font-size:12px;color:var(--mut);background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);padding:4px 10px;cursor:pointer;font-family:inherit;transition:.15s;flex:none}
+.theme-btn:hover{color:var(--txt);border-color:var(--medium)}
+
+/* ===== Section ===== */
+.section{margin-bottom:36px}
+
+/* ===== Hero quote ===== */
+.hero{padding:26px 0;border-bottom:1px solid var(--line);margin-bottom:28px;text-align:center}
+.hero-quote{font-size:20px;font-weight:600;color:var(--txt);letter-spacing:.03em;line-height:1.6}
+.hero-quote .q{color:var(--gold)}
+.hero-sub{font-size:13px;color:var(--mut);margin-top:10px;line-height:24px}
+.hero-sub b{color:var(--medium);font-weight:600}
+.hero-end{margin-top:40px;padding:26px 0;border-top:1px solid var(--line);text-align:center}
+.hero-end .hero-quote{font-size:18px}
+.section-title{
+  font-size:17px;font-weight:600;color:var(--txt);
+  margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--line2);
+  letter-spacing:.01em;
+}
+.section h3{
+  font-size:15px;font-weight:600;color:var(--txt);
+  margin:20px 0 8px;
+}
+.section p{font-size:14px;color:var(--medium);line-height:24px;margin-bottom:10px}
+.section p b,.section li b{color:var(--txt);font-weight:600}
+.section ul,.section ol{padding-left:20px;margin-bottom:12px}
+.section li{font-size:14px;color:var(--medium);line-height:24px;margin-bottom:6px}
+
+/* ===== Table ===== */
+table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0 16px}
+th,td{border-bottom:1px solid var(--line2);padding:8px 10px;text-align:left}
+th{color:var(--mut);font-weight:600;font-size:12px;letter-spacing:.04em;border-bottom:1px solid var(--line);background:var(--bg2)}
+td{color:var(--medium)}
+td b{color:var(--txt);font-weight:600}
+td .num,th .num{font-variant-numeric:tabular-nums}
+table tr:nth-child(even) td{background:var(--bg2)}
+th:not(:first-child),td:not(:first-child){text-align:right}
+table.text-table th:not(:first-child),table.text-table td:not(:first-child){text-align:left}
+
+/* ===== Table wrap (mobile horizontal scroll) ===== */
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:12px 0 16px}
+.table-wrap table{margin:0}
+.table-wrap::-webkit-scrollbar{height:4px}
+.table-wrap::-webkit-scrollbar-thumb{background:var(--line);border-radius:2px}
+
+/* ===== TOC ===== */
+.toc-box{position:relative}
+.toc-toggle{
+  display:none;width:100%;padding:10px 12px;font-size:14px;font-weight:600;color:var(--txt);
+  background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);cursor:pointer;font-family:inherit;text-align:left;
+}
+.toc-toggle:hover{border-color:var(--medium)}
+.toc{display:flex;flex-direction:column;gap:0;border:1px solid var(--line);border-radius:var(--radius);padding:2px 12px;background:var(--bg);box-shadow:var(--shadow-sm)}
+.toc a{
+  font-size:14px;color:var(--medium);padding:8px 0;
+  border-bottom:1px solid var(--line2);
+  display:flex;align-items:center;gap:10px;transition:color .15s,padding-left .15s;
+}
+.toc a:last-child{border-bottom:none}
+.toc a:hover{color:var(--txt);padding-left:4px}
+.toc a .n{font-size:11px;color:var(--light);font-weight:600;font-variant-numeric:tabular-nums;flex:none;width:22px}
+
+/* ===== Badge (inline) ===== */
+.bd{font-size:12px;font-weight:600;padding:1px 8px;border:1px solid;display:inline-block;line-height:1.6}
+.bd.red{color:var(--red);border-color:rgba(224,80,70,.3);background:rgba(224,80,70,.03)}
+.bd.green{color:var(--green);border-color:rgba(46,184,138,.3);background:rgba(46,184,138,.03)}
+.bd.gray{color:var(--mut);border-color:var(--line2);background:var(--bg2)}
+.bd.purple{color:var(--purple);border-color:rgba(122,95,208,.3);background:rgba(122,95,208,.03)}
+.bd.blue{color:var(--blue);border-color:rgba(66,135,206,.3);background:rgba(66,135,206,.03)}
+
+/* ===== Step list ===== */
+.steps{list-style:none;counter-reset:step;margin:12px 0}
+.steps li{
+  position:relative;padding:0 0 14px 32px;counter-increment:step;
+  font-size:14px;color:var(--medium);line-height:24px;
+}
+.steps li::before{
+  content:counter(step);position:absolute;left:0;top:0;
+  font-size:13px;font-weight:700;color:var(--light);
+  font-variant-numeric:tabular-nums;
+}
+.steps li b{color:var(--txt);font-weight:600}
+.steps li p{margin-top:2px;margin-bottom:0}
+
+/* ===== Risk / Note box ===== */
+.note{
+  font-size:13px;color:var(--medium);margin:12px 0;padding:12px 14px;
+  background:var(--bg2);border-left:3px solid var(--gold);border-radius:0 var(--radius) var(--radius) 0;line-height:24px;
+}
+.note b{color:var(--txt);font-weight:600}
+.note.warn{border-left-color:var(--red)}
+
+/* ===== Risk list ===== */
+.risk-list{list-style:none;counter-reset:risk}
+.risk-list li{
+  position:relative;padding:10px 0 10px 30px;font-size:14px;color:var(--medium);
+  border-bottom:1px solid var(--line2);line-height:24px;
+}
+.risk-list li::before{
+  content:counter(risk,decimal-leading-zero);counter-increment:risk;
+  position:absolute;left:0;top:10px;font-size:12px;color:var(--light);font-weight:700;
+  font-variant-numeric:tabular-nums;
+}
+.risk-list li b{color:var(--txt);font-weight:600}
+
+/* ===== Code ===== */
+code{
+  background:var(--bg2);border:1px solid var(--line2);
+  padding:1px 6px;font-size:13px;color:var(--purple);
+  font-variant-numeric:tabular-nums;
+}
+
+/* ===== Sim cards ===== */
+.sim-cards{display:flex;gap:8px;margin:12px 0 16px;flex-wrap:wrap}
+.sim-card{
+  flex:1 1 150px;padding:12px 10px;border:1px solid var(--line);border-radius:var(--radius);
+  text-align:center;background:var(--bg);
+  transition:border-color .15s,background .15s,transform .15s,box-shadow .15s;
+}
+.sim-card:hover{border-color:var(--gold);background:var(--bg2);transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.sim-card .sc-name{font-size:11px;color:var(--mut);font-weight:600;letter-spacing:.03em;margin-bottom:4px}
+.sim-card .sc-ret{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2}
+.sim-card .sc-val{font-size:12px;color:var(--medium);font-variant-numeric:tabular-nums;margin-top:2px}
+.sim-card .sc-dd{font-size:11px;color:var(--mut);font-variant-numeric:tabular-nums;margin-top:2px}
+
+/* ===== Equity SVG chart ===== */
+.eq-chart{margin:16px 0 6px}
+.eq-chart svg{width:100%;height:auto;display:block}
+.eq-legend{display:flex;gap:16px;justify-content:center;margin-top:6px;flex-wrap:wrap}
+.eq-legend span{font-size:12px;color:var(--medium);display:flex;align-items:center;gap:5px}
+.eq-legend span::before{content:'';display:inline-block;width:16px;height:2px;border-radius:1px;background:var(--gold)}
+.eq-note{font-size:12px;color:var(--mut);margin-top:6px;text-align:center}
+
+/* ===== Search input ===== */
+.search-row{display:flex;gap:8px;align-items:center;margin:10px 0}
+.search-row input[type=text]{flex:1;min-width:150px;padding:7px 10px;font-size:13px;font-family:inherit;color:var(--txt);background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius)}
+.search-row input[type=text]:focus{outline:none;border-color:var(--medium)}
+.search-row button{font-size:12px;color:var(--mut);background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);padding:6px 10px;cursor:pointer;font-family:inherit;transition:.15s;flex:none}
+.search-row button:hover{color:var(--txt);border-color:var(--medium)}
+.sw-scroll{max-height:320px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.sw-scroll::-webkit-scrollbar{width:4px}
+.sw-scroll::-webkit-scrollbar-thumb{background:var(--line);border-radius:2px}
+
+/* ===== Signal box ===== */
+.sigbox{border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;margin:10px 0;background:var(--bg)}
+.sigbox .row{display:flex;gap:20px;flex-wrap:wrap}
+.sigbox .item{flex:1;min-width:110px}
+.sigbox .item .l{font-size:12px;color:var(--mut);margin-bottom:2px}
+.sigbox .item .v{font-size:18px;font-weight:700;color:var(--txt);font-variant-numeric:tabular-nums}
+
+/* ===== Footer ===== */
+.footer{
+  margin-top:40px;padding-top:20px;border-top:1px solid var(--line);
+  font-size:12px;color:var(--light);line-height:20px;text-align:center;
+}
+
+/* ===== Back to top ===== */
+.back-top{display:none;position:fixed;bottom:36px;right:16px;z-index:997;width:36px;height:36px;border:1px solid var(--line);background:rgba(255,255,255,.92);backdrop-filter:blur(4px);border-radius:50%;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--medium);box-shadow:var(--shadow-sm);transition:color .15s,border-color .15s,transform .15s}
+.back-top.show{display:flex}
+.back-top:hover{color:var(--txt);border-color:var(--medium);transform:translateY(-2px)}
+
+/* ===== Scrollspy ===== */
+.toc a.active{color:var(--txt);font-weight:600}
+.toc a.active .n{color:var(--txt)}
+
+/* ===== Dark theme ===== */
+body.dark{
+  --bg:#0f1419;--bg2:#161d24;--txt:#e8ecf1;--medium:#aab6c4;--mut:#7d8a99;--light:#5c6b7a;
+  --line:#26313c;--line2:#202a33;--link:#7ea6e8;
+  --gold:#d9b36a;--red:#ef7d70;--green:#55c99b;--blue:#6ba4e8;--purple:#a48ce8;
+}
+body.dark .back-top{background:rgba(22,29,36,.92);border-color:var(--line);color:var(--mut)}
+body.dark a:hover{color:#9dbdf0}
+
+/* ===== Mobile ===== */
+@media(max-width:480px){
+  .wrap{padding:16px 14px 60px}
+  .header h1{font-size:18px}
+  table{font-size:12px}
+  th,td{padding:6px 8px}
+  .sim-cards{flex-wrap:wrap;gap:6px}
+  .sim-card{flex:1 1 46%;min-width:0}
+  .sim-card .sc-ret{font-size:16px}
+  .toc-toggle{display:block}
+  .toc{display:none;border-top:none;padding:0 12px}
+  .toc.open{display:flex}
+  .back-top{bottom:32px;right:10px;width:32px;height:32px;font-size:14px}
+}
+
+/* ===== Print ===== */
+@media print{
+  .back-top,.toc-toggle,.nav{display:none!important}
+  .wrap{padding:0;max-width:100%}
+  .toc{display:block!important}
+  body{font-size:12px}
+  a{color:var(--txt);text-decoration:none}
+}
+</style>
+</head>
+<body class="dark">
+<div class="wrap">
+
+  <div class="header">
+    <div class="header-row">
+      <div>
+        <h1>策略说明 · 永久资产配置</h1>
+        <p>30% 轮动 · 30% 纳指 · 20% 红利低波 · 15% 黄金 · 5% 货币 ｜ 月末判定 · 月度再平衡</p>
+        <div class="nav"><a href="strategy-4asset.html">&larr; 返回策略看板</a></div>
+      </div>
+      <button class="theme-btn" id="themeBtn" title="切换亮暗主题">🌙 暗色</button>
+    </div>
+  </div>
+
+  <!-- 金句 -->
+  <div class="hero">
+    <div class="hero-quote">「不预测，只应对；<span class="q">不择时，只配置</span>。」</div>
+    <div class="hero-sub">一套经过 <b>11.7 年回测验证</b>的资产配置策略 · 一个月末信号 · 月度再平衡 · 长期持有 · 复利滚雪球</div>
+  </div>
+
+  <!-- 目录 -->
+  <div class="section">
+    <div class="section-title">目录</div>
+    <div class="toc-box">
+      <button class="toc-toggle" id="tocToggle">☰ 目录</button>
+      <div class="toc" id="toc">
+        <a href="#s1"><span class="n">01</span>策略介绍</a>
+        <a href="#s2"><span class="n">02</span>核心规则与轮动逻辑</a>
+        <a href="#s3"><span class="n">03</span>为什么有效（回测依据）</a>
+        <a href="#s4"><span class="n">04</span>执行方法（每月操作流程）</a>
+        <a href="#s5"><span class="n">05</span>执行纪律</a>
+        <a href="#s6"><span class="n">06</span>心理按摩（写给拿不住的人）</a>
+        <a href="#s7"><span class="n">07</span>仓位与金额计算</a>
+        <a href="#s8"><span class="n">08</span>标的与费率参考</a>
+        <a href="#s9"><span class="n">09</span>常见问题 FAQ</a>
+        <a href="#s10"><span class="n">10</span>风险提示与免责</a>
+        <a href="#s11"><span class="n">11</span>数据口径与来源</a>
+        <a href="#s12"><span class="n">12</span>详细数据附录</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1 策略介绍 -->
+  <div class="section" id="s1">
+    <div class="section-title">策略介绍</div>
+    <p>「永久资产配置」是一套<b>以轮动为矛、以配置为盾</b>的组合策略：把资金分成五个子仓，其中 30% 在 A 股成长与价值风格之间做动量轮动（进攻），其余 70% 交给纳指、红利低波、黄金、货币长期持有（防守与分散）。每月末只需看<b>一个信号</b>，其余时间什么都不用做。</p>
+    <table>
+      <tr><th>子仓</th><th>权重</th><th>角色</th><th>标的</th></tr>
+      <tr><td><b>成长×价值 轮动</b></td><td class="num">30%</td><td>A股风格进攻</td><td>国证成长100R × 国证价值100R（全收益）</td></tr>
+      <tr><td><b>纳斯达克100</b></td><td class="num">30%</td><td>全球科技主力</td><td>NDX.GI</td></tr>
+      <tr><td><b>A500红利低波</b></td><td class="num">20%</td><td>A股高股息防御</td><td>932259.CSI 全收益（实盘可用 159296 ETF）</td></tr>
+      <tr><td><b>黄金</b></td><td class="num">15%</td><td>避险 · 抗通胀</td><td>518880 黄金ETF</td></tr>
+      <tr><td><b>货币基金</b></td><td class="num">5%</td><td>现金缓冲</td><td>511880 货基ETF</td></tr>
+    </table>
+    <h3>为什么这样配？</h3>
+    <ul>
+      <li><b>相关性低，天然分散。</b> A股风格轮动、美股科技、A股红利、黄金、现金——五类资产彼此低相关，很少同时大跌，组合回撤因此被显著压平（11.7 年最大回撤仅 <b>-14.13%</b>，而纯成长指数同期 -55.57%）。</li>
+      <li><b>30% 的仓位做最聪明的事。</b> 风格轮动是 A 股最有效的超额来源之一：成长与价值交替占优，用 20 日动量跟随占优方；<b>弱市自动持币</b>（两者 20 日涨幅同时为负时轮动仓转货币，不接飞刀）。</li>
+      <li><b>70% 的仓位躺平。</b> 纳指负责全球成长（<b>跌破 40 日趋势自动转货币</b>），红利低波负责高股息防御，黄金负责黑天鹅对冲，货币负责现金缓冲——这些仓只需要再平衡纪律。</li>
+      <li><b>再平衡 = 纪律化的低买高卖。</b> 每月末把五仓调回目标权重：涨多的自动卖出、涨少的自动补回，不靠情绪，靠规则。</li>
+    </ul>
+    <div class="note"><b>一句话</b>　用 30% 的钱做最聪明的轮动，用 70% 的钱躺平配置——<b>不预测市场，只应对市场</b>。</div>
+  </div>
+
+  <!-- 2 核心规则 -->
+  <div class="section" id="s2">
+    <div class="section-title">核心规则与轮动逻辑</div>
+    <h3>30% 轮动仓：20 日动量轮动</h3>
+    <p>每个交易日收盘后，分别计算<b>国证成长100R</b>与<b>国证价值100R</b> 的 20 日涨幅（当日点位 ÷ 20 个交易日前点位 − 1）：</p>
+    <p><span class="bd purple">价值 &gt; 成长 + 1%</span> → 次交易日<b style="color:var(--purple)">全仓价值100R</b></p>
+    <p><span class="bd blue">成长 &gt; 价值 + 1%</span> → 次交易日<b style="color:var(--blue)">全仓成长100R</b></p>
+    <p><span class="bd gray">|差值| ≤ 1%</span> → <b style="color:var(--mut)">维持现持仓不动</b></p>
+    <p><span class="bd red">两者 20 日涨幅均 &lt; 0</span> → <b style="color:var(--red)">轮动仓持币（货币基金），弱市不接飞刀</b></p>
+    <p><b>执行方式</b>：收盘出信号，<b>次交易日</b>执行，信号当日不交易。1% 为动量阈值（回测最优，不建议实盘修改）。</p>
+    <h3>30% 纳指仓：40 日趋势过滤</h3>
+    <p>纳斯达克100 的<b>40 日涨幅</b>为负（跌破 40 日趋势）时，纳指仓<b style="color:var(--red)">全部转持货币</b>；收复 40 日趋势（40 日涨幅转正）后回补。目的：回避美股主跌段（如 2022 年纳指 -35% 的大熊市），少亏即赚。</p>
+    <h3>再平衡：每月末复位权重</h3>
+    <p>每月首个交易日收盘，把五个子仓的市值<b>复位至目标权重</b>（30/30/20/15/5）：卖出涨多的仓，等额买入涨少的仓。</p>
+    <h3>当前信号（实时）</h3>
+    <div class="sigbox" id="sigBox"></div>
+    <p>信号由看板内置数据自动计算，<b>数据截止</b>以看板为准。判定逻辑固定：轮动仓看 20 日动量差值+双弱持币，纳指仓看 40 日趋势——不看消息、不看估值、不看情绪。</p>
+    <h3>阈值说明</h3>
+    <table class="text-table">
+      <tr><th>市场环境</th><th>阈值建议</th><th>理由</th></tr>
+      <tr><td>风格极端分化</td><td class="num"><b>1.0%</b>（默认）</td><td>回测 11.7 年 259 次调仓（含持币切换）、胜率 67.6%，均衡触发频率</td></tr>
+      <tr><td>希望更少操作</td><td class="num">1.5% ~ 2.0%</td><td>减少触发次数，容忍更大风格漂移，更适合低精力人群</td></tr>
+      <tr><td>希望更敏感</td><td class="num">0.5%</td><td>更快跟随风格切换，但交易更频繁、损耗更高</td></tr>
+    </table>
+    <div class="note warn"><b>⚠ 注意</b>　1% 阈值与 20/40 日过滤窗口均为回测选出的核心参数，<b>实盘请勿边改边用</b>。</div>
+  </div>
+
+  <!-- 3 为什么有效 -->
+  <div class="section" id="s3">
+    <div class="section-title">为什么有效（回测依据）</div>
+    <p>回测窗口 <b id="winText"></b>（约 11.7 年、<span id="nDays"></span> 个交易日），100 万起步，含月度再平衡与轮动，未计交易成本：</p>
+    <div class="sim-cards" id="kpiStats"></div>
+    <h3>组合净值走势</h3>
+    <div class="eq-chart"><svg id="eqSvg" viewBox="0 0 640 240" preserveAspectRatio="xMidYMid meet"></svg></div>
+    <div class="eq-legend"><span>组合净值（100 万起步，对数刻度）</span></div>
+    <div class="eq-note">2014-12-31 起步 100 万 → <span id="eqEnd"></span>。历史上大幅回撤集中在 2015 下半年（-13.4%）、2018（-14.1%）、2022（-10.7%），均随牛市修复并创新高。</div>
+    <h3>历年收益率</h3>
+    <table id="annTable"></table>
+    <p>12 个完整年度中 <b>10 年正收益</b>，仅 <b>2018（-8.96%）</b> 与 <b>2022（-4.79%）</b> 为负，且回撤深度远小于同期单指数（如 2018 纯成长 -19.18%、2022 纳指 -33%+）。<b>跌得少，是复利跑得远的前提。</b></p>
+    <h3>对比：本策略 vs 各纯标的 / 无轮动</h3>
+    <table id="cmpTable"></table>
+    <div class="note"><b>怎么看这张表</b>　本策略（带趋势过滤）在<b>总收益（943.43%）、年化（24.17%）、夏普（1.77）三项全部最高</b>，最大回撤 <b>-14.13%</b> 更是远小于所有单标的（纯成长 -55.57%、纯纳指 -35.56%）——表末的「本策略(无趋势过滤)」行（-28.28%）直观展示了<b>两道过滤把回撤几乎砍半、年化不降反升</b>。这是本轮升级的核心价值。</div>
+    <h3>单次轮动统计</h3>
+    <div class="sim-cards" id="swstat"></div>
+    <p>259 次调仓（含持币切换）中盈利 67.6%；最大单次盈利 <b>+101.35%</b>（抓到一段成长主升浪），最大单次亏损 <b>-10.26%</b>（双弱持币把下跌段的亏损也关小了）。典型形态：<b>亏的少、赚的多</b>——动量策略的本质是"截断亏损、让利润奔跑"。</p>
+    <h3>把时间拉长：复利的力量</h3>
+    <table>
+      <tr><th>本金</th><th>5 年</th><th>10 年</th><th>15 年</th></tr>
+      <tr><td class="num"><b>100 万</b></td><td class="num">约 295 万</td><td class="num">约 873 万</td><td class="num">约 2,579 万</td></tr>
+      <tr><td class="num"><b>50 万</b></td><td class="num">约 148 万</td><td class="num">约 437 万</td><td class="num">约 1,290 万</td></tr>
+      <tr><td class="num"><b>10 万</b></td><td class="num">约 30 万</td><td class="num">约 87 万</td><td class="num">约 258 万</td></tr>
+    </table>
+    <p>按回测年化 24.17% 理想演算。复利的关键不是预测涨跌，而是 <b>长期在场 + 纪律执行 + 控制回撤</b>——这三件事，本策略用规则全部替你做完了。</p>
+    <div class="note warn"><b>⚠ 注意</b>　复利示例为<b>理想化演算</b>（未计 ETF 管理费、跟踪误差与交易摩擦），实盘收益通常低于回测，见第 11 节口径说明。</div>
+  </div>
+
+  <!-- 4 执行方法 -->
+  <div class="section" id="s4">
+    <div class="section-title">执行方法（每月操作流程）</div>
+    <p>整套策略每月只需一个动作周期，核心是<b>「每月看一次信号、每月做一次再平衡」</b>：</p>
+    <ol class="steps">
+      <li><b>每月初打开看板</b><p>打开策略看板（strategy-4asset.html），看顶部「当前信号 · 次交易日动作」卡片与「组合净值走势」，确认上月末的持仓与信号状态。</p></li>
+      <li><b>确认轮动仓与纳指仓状态</b><p>看「当前信号」双状态卡片：轮动仓若是「全仓成长/价值」说明风格已切换，若是「轮动仓持币」说明 A 股双弱、该仓暂持货币；纳指仓若显示「纳指转货币」，说明跌破 40 日趋势，30% 仓待回补。信号以<b>数据日期收盘为准，次交易日执行</b>。</p></li>
+      <li><b>执行再平衡</b><p>每月首个交易日收盘，把五仓调回目标权重 30/30/20/15/5：卖出超配仓、等额买入低配仓。金额计算见第 7 节。</p></li>
+      <li><b>记录台账</b><p>在表格或 App 里记一笔：调仓日期、各仓金额、轮动方向。月度 3 分钟，习惯成自然。</p></li>
+      <li><b>其余时间不看盘</b><p>信号与再平衡之外，不做任何操作：不追涨、不杀跌、不抄底、不逃顶。看多了手就痒，手痒是收益最大的敌人。</p></li>
+      <li><b>年末整体复盘</b><p>每年 12 月末做一次年度复盘：对比看板「历年收益率」，确认当年盈亏符合策略形态（有正有负、长期向上），并检查是否有生活资金需求需要调整仓位规模。</p></li>
+    </ol>
+    <div class="note"><b>新手建议</b>　先空仓<b>模拟执行 2~3 个月</b>（只记录不实盘），熟悉"信号—再平衡—台账"节奏后再小额实盘；实盘首年用可承受亏损的闲钱，仓位宁小勿大。</div>
+  </div>
+
+  <!-- 5 执行纪律 -->
+  <div class="section" id="s5">
+    <div class="section-title">执行纪律</div>
+    <p>策略本身很简单，难的是<b>十年如一日地执行</b>。以下纪律是回测收益能变成实盘收益的前提——每一条都来自真实的亏损教训：</p>
+    <ul class="risk-list">
+      <li><b>信号只跟随，不预测。</b> 20 日动量告诉你的是"现在谁强"，不是"明天谁涨"。不要因为"感觉成长涨太多了"就提前减仓，也不要因为"价值跌了这么久"就抢跑抄底——<b>规则没有感情，感情没有规则</b>。</li>
+      <li><b>阈值不许手改。</b> 1% 是回测选出的参数，改一次就是一套新策略。今天觉得敏感、明天觉得迟钝，反复改参数的人，最终会错过每一次完整的风口。</li>
+      <li><b>再平衡必须执行。</b> 月末再平衡是策略的"强制低买高卖"：涨得多的资产自动被卖出，跌得多的资产自动被买入。跳过再平衡 = 亲手扔掉策略最大的免费午餐。</li>
+      <li><b>不预测宏观，不做择时。</b> 加息、降息、贸易摩擦、地缘冲突——这些都不在策略里。策略假设<b>市场不可预测、但动量可以跟随</b>，用规则替代判断，用分散替代预测。</li>
+      <li><b>不用杠杆，不满仓单标的。</b> 五个子仓、30% 封顶的单一资产权重，就是为"最坏情况"设计的。杠杆会放大回撤到无法执行纪律的地步，而<strong>能执行的策略才有收益</strong>。</li>
+      <li><b>只用闲钱。</b> 3 年以内要用的钱、结婚买房的钱、孩子教育的钱，都不该进这个账户。钱的性质决定拿得住多久，拿得住多久决定复利跑到多远。</li>
+      <li><b>每月最多操作两次。</b> 一次看信号、一次做再平衡，加起来不超过 30 分钟。如果发现自己一天看十次盘——不是策略需要你，是你需要管住自己。</li>
+      <li><b>写交易日志。</b> 每次调仓记录日期、方向、金额、当时的心情。三个月后回看，你会发现自己 90% 的"直觉操作"都是多余的。</li>
+    </ul>
+    <div class="note"><b>纪律的本质</b>　策略的收益 = 正确的规则 × 完整的执行周期。执行打八折，收益不是打八折，是<b>归零</b>——因为所有超额都来自"别人拿不住的时候你拿住了"。</div>
+  </div>
+
+  <!-- 6 心理按摩 -->
+  <div class="section" id="s6">
+    <div class="section-title">心理按摩（写给拿不住的人）</div>
+    <p>这一节不教你任何新东西，只帮你度过那些<b>想删掉 App 的时刻</b>。拿得住，是这套策略最难也最值钱的部分。</p>
+    <h3>一、回撤是成本，不是错误</h3>
+    <p>这套策略 11.7 年的最大回撤是 <b>-14.13%</b>——这意味着最惨的时候，100 万会变 86 万。但注意：<b>那是成本，不是亏损</b>。开车要烧油，策略要付回撤。回撤不是策略坏了，而是"市场在打折卖资产"的行情正在发生。历史上每一次 -10% 级别的回撤之后，都跟着创历史新高的年份（2018 → 2019 +27.65%，2022 → 2023 +18.50%）。</p>
+    <h3>二、你不需要抓住每一次涨跌</h3>
+    <p>轮动仓一年只做 20 来次判断，胜率 67.6%——也就是说，<b>约 1/3 的判断是"错"的</b>。但这不重要：错的单次都小（双弱持币把最大单次亏损压到 -10.26%），对的大行情都大（单次最大盈利 +101%）。策略要的是"对的时候在场"，不是"每次都正确"。如果你追求每次都赢，你会错过所有大行情。</p>
+    <h3>三、拿不住的收益不是收益</h3>
+    <p>账户里有浮盈但拿不住，涨 20% 就卖、跌 10% 就慌——那不是收益，是<b>手续费</b>。本策略年化 24.17% 来自 11.7 年的完整周期：2015 股灾、2018 熊市、2020 疫情、2022 加息，全部在场才拿得到这个数字。<b>复利最忌讳的不是下跌，是离场。</b></p>
+    <h3>四、波动 ≠ 亏损</h3>
+    <p>看到账户 -15% 时，请区分两件事：<b>浮亏是过程，卖出才是结果</b>。策略只在两个时刻卖出：信号切换（轮动仓）和再平衡（各仓），都是规则的、可预期的、低频率的。除此之外的每一次"手动卖出"，都是在把波动变成亏损。</p>
+    <h3>五、别和别人比</h3>
+    <p>同事炒概念一周 20%，朋友买了翻倍股——那是别人的运气，不是你的策略。你的组合是<b>为你设计的</b>：要睡得着觉，要拿得住三年，要在最坏年份只亏 13%。比收益率之前，先比谁活得久。<b>市场里活得久的人，最后都赢。</b></p>
+    <h3>六、大跌时请回看这张表</h3>
+    <table>
+      <tr><th>年份</th><th>当年收益</th><th>次年收益</th><th>教训</th></tr>
+      <tr><td class="num">2018</td><td class="num" style="color:var(--red)">-8.96%</td><td class="num" style="color:var(--green)">2019 +27.65%</td><td>熊市最深处，往往是牛市的起点</td></tr>
+      <tr><td class="num">2020</td><td class="num" style="color:var(--green)">+41.86%</td><td class="num" style="color:var(--green)">2021 +30.83%</td><td>在场，才能吃到反弹</td></tr>
+      <tr><td class="num">2022</td><td class="num" style="color:var(--red)">-4.79%</td><td class="num" style="color:var(--green)">2023 +18.50%</td><td>组合分散让熊市不痛，牛市不缺席</td></tr>
+    </table>
+    <h3>七、黄金和货币仓，是买来"让你睡得着"的</h3>
+    <p>15% 黄金 + 5% 货币，长期看收益贡献不大，但它们有<b>情绪价值</b>：股灾时黄金往往上涨或抗跌，货币仓永远不绿。这两仓存在的意义，是让你在所有人恐慌时<b>还能睡得着、还能拿得住</b>——这本身就是超额收益。</p>
+    <h3>八、给时间设个预期</h3>
+    <p><b>3 年起步，5 年看效果，10 年才论输赢。</b> 1 年以内的波动几乎全是噪音；把评价周期拉长到 3 年以上，你会惊讶地发现自己根本不需要"坚持"——因为已经不需要看盘了。</p>
+    <div class="note"><b>最后一句</b>　投资最难的不是策略，是和自己的人性作对。本页的所有纪律和心理按摩，都是给"未来的你"写的——<b>现在读一遍，难过时再读一遍</b>。</div>
+  </div>
+
+  <!-- 7 仓位与金额计算 -->
+  <div class="section" id="s7">
+    <div class="section-title">仓位与金额计算</div>
+    <h3>目标市值怎么算</h3>
+    <p><b>目标市值</b> = 总市值 × 目标权重。例如账户总市值 100 万：轮动 30 万、纳指 30 万、红利低波 20 万、黄金 15 万、货币 5 万。</p>
+    <h3>再平衡金额怎么算</h3>
+    <ul>
+      <li><b>超配/低配</b> = 当前市值 − 目标市值（正为超配，负为低配）</li>
+      <li><b>操作</b> = 卖出所有超配仓，按低配差额等额买入低配仓（先卖后买，一次完成）</li>
+      <li><b>预估手续费</b> = 调仓金额 × 双边费率（场内 ETF 约 0.01%~0.05%），月度一次，损耗可忽略</li>
+    </ul>
+    <h3>轮动仓切换怎么算</h3>
+    <ul>
+      <li>信号切换时，轮动仓 <b>全部卖出当前标的、等额买入另一标的</b>（30% 仓内全仓切换，无比例拆分）</li>
+      <li>切换不影响其余四仓，也不影响当月的再平衡计划</li>
+    </ul>
+    <div class="note warn"><b>⚠ 注意</b>　不要为了"省手续费"跳过再平衡——再平衡的长期价值远大于那点佣金；同样，不要为了"多赚点"提前调仓——规则外的操作都是风险。</div>
+  </div>
+
+  <!-- 8 标的与费率参考 -->
+  <div class="section" id="s8">
+    <div class="section-title">标的与费率参考</div>
+    <table>
+      <tr><th>子仓</th><th>指数 / 标的</th><th>场内 ETF 参考</th></tr>
+      <tr><td>轮动仓（成长侧）</td><td>国证成长100R（<code>480080</code>，全收益）</td><td>易方达国证成长100ETF <b>159259</b></td></tr>
+      <tr><td>轮动仓（价值侧）</td><td>国证价值100R（<code>480081</code>，全收益）</td><td>价值ETF易方达 <b>159263</b></td></tr>
+      <tr><td>纳指仓</td><td>纳斯达克100（<code>NDX.GI</code>）</td><td>纳指100 ETF <b>159509</b> / <b>513100</b> 等</td></tr>
+      <tr><td>红利低波仓</td><td>A500红利低波（<code>932259.CSI</code> 全收益）</td><td>红利低波ETF <b>159296</b> 等</td></tr>
+      <tr><td>黄金仓</td><td>黄金现货（SGE Au99.99 链）</td><td>黄金ETF <b>518880</b></td></tr>
+      <tr><td>货币仓</td><td>货币基金</td><td>货币ETF <b>511880</b></td></tr>
+    </table>
+    <p><b>费率提示</b>　A 股 ETF 管理+托管费率普遍 0.15%~0.6%/年，纳指类 QDII 约 0.6%~0.8%/年（注意溢价率与限购），黄金 ETF 约 0.5%/年上下。综合按 <b>0.3%~0.5%/年</b> 估算实盘损耗；场内交易佣金以券商为准，通常可谈至万 0.5 以下。</p>
+    <div class="note"><b>回测口径</b>　回测使用<b>全收益指数</b>（含分红再投资）或<b>基金累计净值</b>，实盘 ETF 存在跟踪误差，指数略高于 ETF ≈ 分红与费率差，这是实盘收益低于回测的主因。</div>
+  </div>
+
+  <!-- 9 FAQ -->
+  <div class="section" id="s9">
+    <div class="section-title">常见问题 FAQ</div>
+    <h3>Q：这套策略适合什么人？</h3>
+    <p>适合能拿 <b>3 年以上</b>、能接受 <b>20%+ 回撤</b>、没时间盯盘、但愿意每月花 30 分钟执行的人。如果你每天想看盘、想抓热点，这套策略会让你无聊到难受——那是它的优点。</p>
+    <h3>Q：需要每天盯盘吗？</h3>
+    <p>不需要。信号每日自动计算，但<b>每月只看一次</b>即可：月初看信号（轮动仓 + 纳指仓两个状态）+ 做再平衡。中间任何一天的涨跌都不改变规则。</p>
+    <h3>Q：「轮动仓持币」和「纳指转货币」是什么？</h3>
+    <p>这是本轮升级新增的两道<b>趋势过滤</b>：① 当国证成长与价值 100R 的 20 日涨幅<b>同时为负</b>（A 股双弱）时，轮动仓 30% 转持货币，等任一侧转正再回场——弱市不接飞刀；② 当纳指 40 日涨幅为负（跌破 40 日趋势）时，纳指仓 30% 转持货币，收复后再回补。历史回测中这两道过滤把最大回撤从 -28.28% 压到 <b>-14.13%</b>，年化反而从 22.26% 升到 <b>24.17%</b>（对比表末行可验证）。代价是震荡市会有"来回切换"的磨损，详见第 10 节风险。</p>
+    <h3>Q：轮动仓会不会频繁交易？</h3>
+    <p>11.7 年共 259 次（含持币切换），平均约 <b>每年 22 次</b>、每月不到 2 次；且只发生在轮动仓 30% 仓位内，交易成本占比很低。</p>
+    <h3>Q：1% 阈值是什么意思？</h3>
+    <p>是"风格切换的确认线"：只有当一方 20 日涨幅超过另一方 <b>1 个百分点以上</b>才切换，小于 1% 视为噪音、维持不动。目的是过滤假信号、减少无效交易。</p>
+    <h3>Q：为什么纳指要占 30%？</h3>
+    <p>纳指是全球成长资产的代表，与 A 股相关性低，回测 11.7 年年化 19.51%；30% 权重让它成为组合的"第二引擎"，且与 A 股风格轮动天然互补（A 股弱时美股往往强）。</p>
+    <h3>Q：黄金为什么要 15%？</h3>
+    <p>黄金与股票、债券长期低相关甚至负相关，是<b>黑天鹅对冲器</b>：2020 疫情、2022 加息周期中均提供缓冲。15% 是"够用又不拖累收益"的经验权重。</p>
+    <h3>Q：实盘收益会比回测低多少？</h3>
+    <p>回测用全收益指数，实盘要扣 ETF 管理费、跟踪误差与交易摩擦，估算年化低 <b>0.3%~0.5%</b>（约回测的 98 折~96 折）。此外纳指类 QDII 有汇率与溢价因素，短期波动更大。</p>
+    <h3>Q：什么时候该停止执行？</h3>
+    <p>只有两种情况：① 这笔钱 3 年内要动用；② 你彻底理解了规则并<b>书面</b>修改了它。除此之外——<b>回撤不是停止的理由，无聊也不是</b>。</p>
+  </div>
+
+  <!-- 10 风险提示 -->
+  <div class="section" id="s10">
+    <div class="section-title">风险提示与免责</div>
+    <ul class="risk-list">
+      <li><b>动量失效风险。</b> 极端单边反转行情中，20 日动量会滞后（例如风格切换第一周），轮动仓短期跑输"拿反方的人"；回测中表现为 2015 下半年 -13.4% 级别的回撤。</li>
+      <li><b>趋势过滤磨损风险。</b> 双弱持币与纳指过滤在震荡市中会"持币→进场→又持币"来回切换产生磨损，也可能错过反弹第一波（2026 YTD 即略跑输无过滤版 1.7pp）；过滤是"少亏换平滑"，不是每次都赢。</li>
+      <li><b>纳指集中风险。</b> 纳指 30% 仓位集中度高且为 QDII，存在估值回归、<b>美元汇率波动</b>与场内<b>溢价/折价</b>风险；2022 年纳指最大回撤超 -35%，组合靠其余四仓与趋势过滤缓冲。</li>
+      <li><b>红利低波周期性。</b> 红利风格在牛市后期与成长行情中会阶段性跑输；932259 指数仅 2014 年底起有全历史，早期数据为指数回填口径。</li>
+      <li><b>黄金波动。</b> 黄金 15% 仓位并非稳赚，其波动率与权益类相当，金价长期震荡期可能数年不涨（如 2013-2018）。</li>
+      <li><b>再平衡交易损耗。</b> 月度再平衡在极端行情下会产生相对更高的换手与佣金，小额资金尤其敏感。</li>
+      <li><b>回测 ≠ 实盘。</b> 回测基于全收益指数/累计净值，未完整计入管理费、跟踪误差、申赎限制、税收与滑点；历史表现不代表未来收益。</li>
+    </ul>
+    <p style="margin-top:16px">本页面与配套看板仅作<b>策略可视化与辅助决策工具</b>，不构成投资建议。基金有风险，投资须谨慎。</p>
+  </div>
+
+  <!-- 11 数据口径 -->
+  <div class="section" id="s11">
+    <div class="section-title">数据口径与来源</div>
+    <table>
+      <tr><th>资产</th><th>数据源</th><th>口径</th><th>区间</th></tr>
+      <tr><td>国证成长100R / 价值100R</td><td>华宝 UDSP（480080 / 480081）</td><td>全收益指数</td><td class="num">2014-12-31 起</td></tr>
+      <tr><td>纳斯达克100</td><td>华宝 UDSP（NDX.GI）</td><td>价格 / 全收益</td><td class="num">2014-12-31 起</td></tr>
+      <tr><td>A500红利低波</td><td>华宝 UDSP（932259.CSI）</td><td>全收益指数</td><td class="num">2014-12-31 起</td></tr>
+      <tr><td>黄金（518880）</td><td>天天基金</td><td>基金累计净值</td><td class="num">2014-12-31 起</td></tr>
+      <tr><td>货币（511880）</td><td>天天基金</td><td>基金累计净值</td><td class="num">2014-12-31 起</td></tr>
+    </table>
+    <div class="note"><b>数据截止</b>　回测窗口 <b id="winText2"></b>，共 <span id="nDays2"></span> 个交易日；轮动仓信号与看板同步更新。A500红利低波仓用全收益指数 932259.CSI（替代 159296 ETF 的短历史，已验证两者走势吻合、指数略高≈含股息）。每月数据更新后重新生成看板与本文档。</div>
+    <h3>更新日志</h3>
+    <table class="text-table">
+      <tr><th>日期</th><th>变更</th></tr>
+      <tr><td class="num">2026-08-28</td><td><b>升级：新增两道趋势过滤</b>——① 轮动仓双弱持币（成长&价值 20 日涨幅同时&lt;0 → 轮动仓持币货币）；② 纳指 40 日趋势过滤（40 日涨幅&lt;0 → 纳指仓转货币）。回测口径由「年化 22.26% / 回撤 -28.28%」优化为「年化 24.17% / 回撤 -14.13% / 夏普 1.77」（对比表末行「本策略(无趋势过滤)」为旧口径）。</td></tr>
+      <tr><td class="num">2026-08-27</td><td>页面家族化：概览看板 + 策略 Wiki 上线；策略定名「永久资产配置策略」。</td></tr>
+    </table>
+  </div>
+
+  <!-- 12 详细数据附录 -->
+  <div class="section" id="s12">
+    <div class="section-title">详细数据附录</div>
+    <h3>全量调仓明细（价值 ↔ 成长 ↔ 持币，共 <span id="swTotal"></span> 次）</h3>
+    <div class="search-row">
+      <input type="text" id="swSearch" placeholder="搜索日期（如 2023）或 方向（价值/成长/持币）">
+      <button id="onlyCash">只看持币切换</button>
+      <button id="copySw">复制全部</button>
+    </div>
+    <div class="table-wrap"><div class="sw-scroll">
+      <table id="swtbl"><thead><tr><th>日期</th><th>方向</th><th>价值20日%</th><th>成长20日%</th></tr></thead><tbody></tbody></table>
+    </div></div>
+    <div class="note" id="swcount"></div>
+    <h3>单次盈亏口径</h3>
+    <p>单次盈亏 = 每次调仓<b>后</b>至下一次调仓<b>前</b>，所持有标的的累计收益率（如上表 2015-02-03 由价值切向成长，则该次盈亏 = 此后持有成长至下一次切换的累计涨跌）。胜率 = 盈利次数 / 总次数。该口径已并入第 3 节统计卡片。</p>
+    <h3>超额与现金仓说明</h3>
+    <p><b>超额曲线</b>：轮动仓（30%）相对"静态无轮动（成长+价值各半持有）"的累计超额收益，验证<b>轮动本身创造的价值</b>——正值代表轮动跑赢静态持有。</p>
+    <p><b>现金仓曲线</b>：5% 货币仓净值轨迹（几乎一条水平线），体现低风险仓对组合的平滑作用。</p>
+    <h3>参数回测说明</h3>
+    <p>本策略参数为<b>内置固定</b>：轮动阈值 1%、双弱持币窗口 20 日、纳指过滤 40 日、月度再平衡。以上参数由 11.7 年回测选出（敏感性：双弱 10/20/40 日、纳指 40/60/90/120 日邻域均显著优于无过滤版，非单点过拟合）。<b>实盘请使用默认参数，不要边改边用。</b></p>
+    <div class="note"><b>说明</b>　以上附录数据均为历史回测结果，仅供策略验证参考，不构成投资建议。</div>
+  </div>
+
+  <!-- 收尾金句 -->
+  <div class="hero-end">
+    <div class="hero-quote">「守得住回撤，<span class="q">才拿得到收益</span>。」</div>
+    <div class="hero-sub">轮动负责进攻，配置负责防守——把规则交给系统，把时间留给复利。</div>
+  </div>
+
+  <div class="footer">
+    永久资产配置策略 · 策略说明 · 仅供学习与辅助决策，不构成投资建议
+  </div>
+</div>
+<div class="back-top" id="backTop">↑</div>
+
+<script>
+const DATA=__DATA__;
+const EXTRA=__EXTRA__;
+
+// ===== 工具 =====
+const fmt=(x,d=2)=>{if(x==null||isNaN(x)||!isFinite(x))return '—';return Number(x).toLocaleString('zh-CN',{maximumFractionDigits:d,minimumFractionDigits:d});};
+const pct=(x)=>(x>=0?'+':'')+fmt(x)+'%';
+const posneg=(x)=>x>=0?'var(--green)':'var(--red)';
+const iso=s=>String(s).replace(/(\d{4})(\d{2})(\d{2})/,'$1-$2-$3');
+
+// ===== 1) KPI 统计卡片 =====
+(function(){
+  const s=DATA.stats;
+  const cards=[
+    ['总收益',pct(s.total),'var(--gold)','策略期内累计涨幅（含再平衡与轮动）'],
+    ['年化收益',pct(s.cagr),'var(--green)','折算到每年的复合收益率'],
+    ['最大回撤',pct(s.mdd),'var(--red)','历史从最高点的最大下跌，越小越好'],
+    ['年化波动',fmt(s.vol)+'%','var(--blue)','收益的年化标准差，衡量风险水平'],
+    ['夏普比率',fmt(s.sharpe),'var(--purple)','每承担一单位波动获得的超额收益，越高越好']
+  ];
+  document.getElementById('kpiStats').innerHTML=cards.map(c=>`<div class="sim-card"><div class="sc-name">${c[3]}</div><div class="sc-ret" style="color:${c[2]}">${c[1]}</div><div class="sc-val">${c[0]}</div></div>`).join('');
+  document.getElementById('winText').textContent=iso(DATA.meta.start)+' ~ '+iso(DATA.meta.end);
+  document.getElementById('nDays').textContent=DATA.meta.n_days;
+  document.getElementById('winText2').textContent=iso(DATA.meta.start)+' ~ '+iso(DATA.meta.end);
+  document.getElementById('nDays2').textContent=DATA.meta.n_days;
+  document.getElementById('eqEnd').textContent='最新净值 '+fmt(DATA.equity.curve[DATA.equity.curve.length-1]);
+})();
+
+// ===== 2) 净值 SVG（对数刻度，颜色随主题）=====
+window.__buildEq=function(){
+  const dates=DATA.equity.dates, vals=DATA.equity.curve;
+  const cs=getComputedStyle(document.body);
+  const GOLD=cs.getPropertyValue('--gold').trim()||'#c9a05a';
+  const LINE=cs.getPropertyValue('--line').trim()||'#e5edf5';
+  const MUT=cs.getPropertyValue('--mut').trim()||'#8494a7';
+  const W=640,H=240,pl=44,pr=10,pt=14,pb=26;
+  const iw=W-pl-pr,ih=H-pt-pb;
+  const logv=Math.log10, lo=Math.log10(Math.min.apply(null,vals)), hi=Math.log10(Math.max.apply(null,vals));
+  const y=v=>pt+ih-(logv(v)-lo)/(hi-lo)*ih;
+  const x=i=>pl+iw*(i/(vals.length-1));
+  const path=vals.map((v,i)=>`${i===0?'M':'L'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join('');
+  const area=path+`L${x(vals.length-1).toFixed(1)},${(H-pb).toFixed(1)}L${pl.toFixed(1)},${(H-pb).toFixed(1)}Z`;
+  // gridlines: 100万 200万 400万 800万
+  const gl=[1000000,2000000,4000000,8000000].filter(v=>v<=Math.max.apply(null,vals));
+  const svg=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
+    <defs><linearGradient id="eqfill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="${GOLD}" stop-opacity=".28"/><stop offset="1" stop-color="${GOLD}" stop-opacity=".02"/>
+    </linearGradient></defs>
+    ${gl.map(v=>`<line x1="${pl}" y1="${y(v)}" x2="${W-pr}" y2="${y(v)}" stroke="${LINE}" stroke-width="1" stroke-dasharray="3 4"/>
+      <text x="${pl-6}" y="${y(v)+4}" text-anchor="end" font-size="10" fill="${MUT}">${v>=1000000?(v/10000).toLocaleString('zh-CN')+'万':v}</text>`).join('')}
+    <path d="${area}" fill="url(#eqfill)"/>
+    <path d="${path}" fill="none" stroke="${GOLD}" stroke-width="2" stroke-linejoin="round"/>
+    <text x="${pl}" y="${H-8}" font-size="10" fill="${MUT}">${iso(dates[0])}</text>
+    <text x="${W-pr}" y="${H-8}" text-anchor="end" font-size="10" fill="${MUT}">${iso(dates[dates.length-1])}</text>
+  </svg>`;
+  document.getElementById('eqSvg').innerHTML=svg;
+};
+window.__buildEq();
+
+// ===== 3) 当前信号（双状态 + 数值判定链）=====
+(function(){
+  const c=DATA.current,thr=DATA.meta.thr;
+  const holdTag=c.rotHold==='growth'?'<span class="bd blue">成长100R</span>':(c.rotHold==='value'?'<span class="bd purple">价值100R</span>':'<span class="bd gray">持币</span>');
+  const sigColor=c.rotSignal.includes('成长')?'var(--blue)':(c.rotSignal.includes('价值')?'var(--purple)':'var(--red)');
+  const ndxColor=c.ndxSignal==='持有纳指'?'var(--green)':'var(--red)';
+  const dblWeak=c.g20<0&&c.v20<0;
+  const gtVal=c.v20>c.g20+thr,gtGrow=c.g20>c.v20+thr;
+  const rotRule=dblWeak?`双弱触发：成长20日 ${pct(c.g20)} 与 价值20日 ${pct(c.v20)} 均&lt;0 → <b style="color:var(--red)">轮动仓持币</b>`
+    :gtVal?`差值 ${pct(c.diff)} &gt; +${thr}% ✓ → <b style="color:var(--purple)">全仓价值</b>`
+    :gtGrow?`差值 ${pct(-c.diff)} &gt; +${thr}% ✓ → <b style="color:var(--blue)">全仓成长</b>`
+    :`|差值| ${pct(Math.abs(c.diff))} ≤ ${thr}% → 维持现持仓`;
+  const ndxRule=c.ndxMom<0?`纳指40日动量 ${pct(c.ndxMom)} &lt; 0 ✗ → <b style="color:var(--red)">转货币</b>（距收复还差 +${c.ndxRecoverPct}%）`
+    :`纳指40日动量 ${pct(c.ndxMom)} ≥ 0 ✓ → <b style="color:var(--green)">持有纳指</b>`;
+  document.getElementById('sigBox').innerHTML=
+    `<div class="row">
+      <div class="item"><div class="l">数据日期</div><div class="v">${c.date}</div></div>
+      <div class="item"><div class="l">轮动仓当前持仓（30%）</div><div class="v">${holdTag}</div></div>
+      <div class="item"><div class="l">轮动仓信号</div><div class="v" style="color:${sigColor}">${c.rotSignal}</div></div>
+      <div class="item"><div class="l">纳指仓（30%）</div><div class="v" style="color:${ndxColor}">${c.ndxSignal}</div></div>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <div class="item"><div class="l">成长100R 20日</div><div class="v" style="color:${posneg(c.g20)}">${pct(c.g20)}</div></div>
+      <div class="item"><div class="l">价值100R 20日</div><div class="v" style="color:${posneg(c.v20)}">${pct(c.v20)}</div></div>
+      <div class="item"><div class="l">差值（价值−成长）</div><div class="v" style="color:${posneg(c.diff)}">${pct(c.diff)}</div></div>
+      <div class="item"><div class="l">纳指40日动量</div><div class="v" style="color:${posneg(c.ndxMom)}">${pct(c.ndxMom)}</div></div>
+    </div>
+    <div style="font-size:13px;color:var(--medium);margin-top:10px;line-height:1.8">
+      ${rotRule}<br>${ndxRule}<br>
+      <span style="color:var(--mut)">上次调仓 ${c.lastSwitch||'—'} ｜ 轮动仓已持仓 ${c.holdDays} 天 ｜ 数据截止 ${c.date}</span>
+    </div>`;
+})();
+
+// ===== 4) 历年收益率 =====
+(function(){
+  const rows=EXTRA.annual.map(a=>`<tr><td><b>${a.y}</b></td><td style="color:${a.ret>=0?'var(--green)':'var(--red)'}">${pct(a.ret)}</td><td style="color:var(--red)">${pct(a.mdd)}</td></tr>`).join('');
+  document.getElementById('annTable').innerHTML=`<thead><tr><th>年份</th><th>收益</th><th>当年最大回撤</th></tr></thead><tbody>${rows}</tbody>`;
+})();
+
+// ===== 5) 对比表 =====
+(function(){
+  const rows=[{k:'本策略（轮动）',...DATA.stats},...Object.entries(DATA.comparison).map(([k,v])=>({k,...v}))];
+  const best={total:Math.max(...rows.map(r=>r.total)),cagr:Math.max(...rows.map(r=>r.cagr)),mdd:Math.max(...rows.map(r=>r.mdd)),sharpe:Math.max(...rows.map(r=>r.sharpe))};
+  const tr=rows.map(r=>{
+    const hl=(v,b)=>Math.abs(v-b)<1e-9?'<b style="color:var(--gold)">'+pct(v)+'</b>':pct(v);
+    return `<tr><td><b>${r.k}</b></td><td>${hl(r.total,best.total)}</td><td>${hl(r.cagr,best.cagr)}</td><td style="color:var(--red)">${pct(r.mdd)}</td><td>${Math.abs(r.sharpe-best.sharpe)<1e-9?'<b style="color:var(--gold)">'+fmt(r.sharpe)+'</b>':fmt(r.sharpe)}</td></tr>`;
+  }).join('');
+  document.getElementById('cmpTable').innerHTML=`<thead><tr><th>方案</th><th>总收益</th><th>年化</th><th>最大回撤</th><th>夏普</th></tr></thead><tbody>${tr}</tbody>`;
+})();
+
+// ===== 6) 单次轮动统计 =====
+(function(){
+  const ss=EXTRA.switchStats;
+  const cards=[
+    [ss.n+' 次','调仓总次数','var(--txt)'],
+    [pct(ss.maxWin),'单次最大盈利','var(--green)'],
+    [pct(ss.maxLoss),'单次最大亏损','var(--red)'],
+    [ss.winRate+'%','胜率（盈利/总）','var(--gold)']
+  ];
+  document.getElementById('swstat').innerHTML=cards.map(c=>`<div class="sim-card"><div class="sc-ret" style="color:${c[2]}">${c[0]}</div><div class="sc-val">${c[1]}</div></div>`).join('');
+})();
+
+// ===== 7) 全量调仓明细 =====
+(function(){
+  const tb=document.querySelector('#swtbl tbody');
+  const dirName=f=>f==='value'?'价值':f==='growth'?'成长':'持币';
+  let onlyCash=false;
+  document.getElementById('swTotal').textContent=DATA.rotation.switches.length;
+  const render=()=>{
+    const q=document.getElementById('swSearch').value.trim();
+    const all=DATA.rotation.switches.slice().reverse();
+    const rows=all.filter(s=>{
+      if(onlyCash&&!(s.from==='cash'||s.to==='cash'))return false;
+      if(!q)return true;const dir=dirName(s.from)+'→'+dirName(s.to);return s.d.includes(q)||dir.includes(q)||dir.includes('持币');});
+    tb.innerHTML=rows.map(s=>{const dir=dirName(s.from)+'→'+dirName(s.to);
+      return `<tr><td>${iso(s.d)}</td><td>${dir}</td><td style="color:${s.v20==null?'var(--mut)':posneg(s.v20)}">${s.v20==null?'—':pct(s.v20)}</td><td style="color:${s.g20==null?'var(--mut)':posneg(s.g20)}">${s.g20==null?'—':pct(s.g20)}</td></tr>`;}).join('');
+    document.getElementById('swcount').textContent=`共 ${DATA.rotation.switches.length} 次调仓（含持币切换），当前显示 ${rows.length} 条（最新在前）。`;
+  };
+  document.getElementById('swSearch').addEventListener('input',render);
+  document.getElementById('onlyCash').addEventListener('click',()=>{
+    onlyCash=!onlyCash;
+    const b=document.getElementById('onlyCash');
+    b.textContent=onlyCash?'显示全部':'只看持币切换';
+    b.style.borderColor=onlyCash?'var(--gold)':'';
+    render();
+  });
+  document.getElementById('copySw').addEventListener('click',()=>{
+    const head='日期,方向,价值20日%,成长20日%';
+    const body=DATA.rotation.switches.map(s=>[s.d,dirName(s.from)+'→'+dirName(s.to),s.v20,s.g20].join(',')).join('\n');
+    const btn=document.getElementById('copySw'),orig=btn.textContent;
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(head+'\n'+body).then(()=>{btn.textContent='已复制 ✓';setTimeout(()=>btn.textContent=orig,1500);}).catch(()=>alert('复制失败，请手动选择'));}
+    else alert('当前环境不支持剪贴板');
+  });
+  render();
+})();
+
+// ===== 页面工具：表格滚动包裹 / 目录 / 置顶 / 主题 =====
+(function(){
+  document.querySelectorAll('table').forEach(t=>{
+    if(t.parentNode&&t.parentNode.classList&&t.parentNode.classList.contains('table-wrap'))return;
+    const w=document.createElement('div');w.className='table-wrap';
+    t.parentNode.insertBefore(w,t);w.appendChild(t);
+  });
+  const tocToggle=document.getElementById('tocToggle'),tocEl=document.getElementById('toc');
+  if(tocToggle&&tocEl){
+    tocToggle.addEventListener('click',()=>{tocEl.classList.toggle('open');tocToggle.textContent=tocEl.classList.contains('open')?'收起目录 ▲':'☰ 目录';});
+    tocEl.addEventListener('click',()=>{if(tocEl.classList.contains('open')){tocEl.classList.remove('open');tocToggle.textContent='☰ 目录';}});
+  }
+  const btn=document.getElementById('backTop');
+  window.addEventListener('scroll',()=>btn.classList.toggle('show',window.scrollY>400));
+  btn.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+  const tocLinks=document.querySelectorAll('.toc a');const sections=[];
+  tocLinks.forEach(a=>{const id=a.getAttribute('href').slice(1);const el=document.getElementById(id);if(el)sections.push({id,el,link:a});});
+  window.addEventListener('scroll',()=>{
+    const sy=window.scrollY+80;let cur=null;
+    sections.forEach(s=>{if(s.el.offsetTop<=sy)cur=s;});
+    tocLinks.forEach(a=>a.classList.remove('active'));
+    if(cur)cur.link.classList.add('active');
+  });
+  const tBtn=document.getElementById('themeBtn');
+  function applyTheme(){
+    const dark=document.body.classList.contains('dark');
+    tBtn.textContent=dark?'☀️ 亮色':'🌙 暗色';
+    try{localStorage.setItem('w4a-theme',dark?'dark':'light');}catch(e){}
+    if(window.__buildEq)window.__buildEq();
+  }
+  try{if(localStorage.getItem('w4a-theme')==='light')document.body.classList.remove('dark');}catch(e){}
+  tBtn.addEventListener('click',()=>{document.body.classList.toggle('dark');applyTheme();});
+  applyTheme();
+})();
+</script>
+</body>
+</html>
