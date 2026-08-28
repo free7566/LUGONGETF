@@ -1,0 +1,8 @@
+# 运行时生成 / 缓存（由工作流每次重建，无需提交）
+_raw_daily.json
+strategy_extra.json
+strategy-4asset.html
+wiki4a.html
+dist/
+__pycache__/
+*.pyc
