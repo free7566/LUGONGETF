@@ -1,0 +1,55 @@
+name: 每日更新（开盘前自动重建）
+
+on:
+  schedule:
+    # 北京时间 周一~周五 07:00（开盘前） = UTC 周日~周四 23:00
+    # 注意：GitHub Actions 定时为尽力而为，可能延迟数分钟~数十分钟，但一般不会超过开盘
+    - cron: '0 23 * * 0-4'
+  workflow_dispatch:   # 允许在 Actions 页面手动触发
+  push:
+    branches: [main]    # 推送代码也立即重建并发布
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 拉取最新日频数据并重算
+        env:
+          # 华宝 UDSP 密钥（可选）：在仓库 Settings→Secrets 设 HJ_APP_SECRET；不设则用脚本内置默认值
+          HJ_APP_SECRET: ${{ secrets.HJ_APP_SECRET }}
+        run: |
+          python3 -c "import new_strategy_backtest as m; m.fetch_all()"
+          node gen_extra.js
+          node _assemble4a.js
+          node _assemble_wiki4a.js
+          mkdir -p dist
+          cp index.html strategy-4asset.html wiki4a.html dist/
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
