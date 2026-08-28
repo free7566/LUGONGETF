@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>永久资产配置策略</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2"></script>
+<style>
+:root{--bg:#0a0d13;--card:#121720;--line:#232b3a;--txt:#e8ecf2;--mut:#8794a6;--gold:#e3b341;--blue:#5b9bff;--green:#3ecf8e;--red:#ff6b6b;--purple:#b07cff;
+  --c-eq:var(--gold);--c-dd:var(--red);--c-rot:var(--purple);--c-rotlong:var(--green);--c-cash:#9aa4b2;--c-excess:#5b9bff;
+  --sh-dark:rgba(0,0,0,.28);--sh-light:rgba(0,0,0,.12)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.5;
+  transition:background .3s ease,color .3s ease}
+.wrap{max-width:1080px;margin:0 auto;padding:20px 16px 60px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px;flex-wrap:wrap}
+h1{font-size:22px;margin:0}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap}
+.btn{background:var(--card);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:13px;cursor:pointer;
+  transition:background .2s,border-color .2s,transform .08s}
+.btn:hover{border-color:var(--gold)}
+.btn:active{transform:scale(.96)}
+.btn.on{border-color:var(--gold);color:var(--gold)}
+.sub{color:var(--mut);font-size:13px;margin-bottom:16px}
+.sub .l1{font-weight:600;color:var(--txt)}
+.sub .l2{color:var(--mut);margin-top:2px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:16px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;position:relative;
+  box-shadow:0 2px 8px var(--sh-dark);transition:transform .15s ease,box-shadow .15s ease,background .3s,color .3s}
+.kpi:hover{transform:translateY(-2px);box-shadow:0 6px 16px var(--sh-dark)}
+.kpi .v{font-size:24px;font-weight:700;line-height:1.15}
+.kpi .l{font-size:11px;color:var(--mut);margin-top:3px}
+.kpi[data-tip]:hover::after{content:attr(data-tip);position:absolute;top:calc(100% + 6px);left:50%;transform:translateX(-50%);
+  background:#000;color:#fff;padding:6px 10px;border-radius:8px;font-size:12px;white-space:normal;width:max-content;max-width:240px;z-index:30;
+  box-shadow:0 4px 14px rgba(0,0,0,.5)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px;
+  box-shadow:0 2px 8px var(--sh-dark);transition:transform .15s ease,box-shadow .15s ease,background .3s,color .3s}
+.card:hover{box-shadow:0 6px 18px var(--sh-dark)}
+.card-h{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.card h2{font-size:15px;margin:0;color:var(--mut);font-weight:600;letter-spacing:.5px}
+.card h2[title]{cursor:help;border-bottom:1px dotted var(--mut)}
+.chart-tools{display:flex;gap:6px}
+.mini{background:transparent;color:var(--mut);border:1px solid var(--line);border-radius:6px;padding:3px 8px;font-size:12px;cursor:pointer;transition:.15s}
+.mini:hover{color:var(--txt);border-color:var(--gold)}
+.chart{position:relative;height:300px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:760px){.grid2{grid-template-columns:1fr}.chart{height:240px}.card{padding:12px}.kpis{gap:8px}}
+.sig{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.sig .box{background:#10131a;border:1px solid var(--line);border-radius:10px;padding:12px 16px;flex:1;min-width:130px;transition:background .3s}
+.sig .box .v{font-size:20px;font-weight:700}
+.sig .box .l{font-size:12px;color:var(--mut)}
+.tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:700}
+.t-grow{background:rgba(91,155,255,.15);color:var(--blue)}
+.t-val{background:rgba(227,179,65,.15);color:var(--gold)}
+.t-cash{background:rgba(154,164,178,.15);color:var(--c-cash)}
+.sig-banner{background:rgba(255,107,107,.12);border:1px solid var(--red);color:var(--red);border-radius:10px;padding:9px 14px;font-size:13px;font-weight:600;margin-bottom:10px}
+.sig-banner.ok{background:rgba(62,207,142,.10);border-color:var(--green);color:var(--green)}
+.sig-rule{font-size:12px;color:var(--mut);margin-top:8px;line-height:1.8}
+.sig-rule .ok{color:var(--green);font-weight:700}
+.sig-rule .no{color:var(--red);font-weight:700}
+.sig-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.sig-meta span{font-size:11px;color:var(--mut);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:3px 8px}
+#cmp tr.old td{color:var(--mut);font-style:italic}
+#cmp td.bar{background-image:linear-gradient(90deg,rgba(91,155,255,.22) var(--w,0%),transparent var(--w,0%))}
+.ann-bar{display:inline-block;width:42px;height:8px;border-radius:2px;vertical-align:middle;margin-left:6px}
+@media(max-width:480px){.sig .box{flex:1 1 44%;min-width:0}}
+.s-val{color:var(--gold);font-weight:700}.s-grow{color:var(--blue);font-weight:700}.s-hold{color:var(--mut);font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--mut);font-weight:600}
+#swtbl tbody tr:nth-child(even){background:rgba(255,255,255,.04)}
+#swtbl tbody tr:hover{background:rgba(91,155,255,.10)}
+#ann tbl tbody tr:nth-child(even),#cmp tbody tr:nth-child(even){background:rgba(255,255,255,.03)}
+#rules table td{word-break:break-word;max-width:340px;vertical-align:top}
+.pos{color:var(--red)}.neg{color:var(--green)}.neu{color:var(--mut)}
+.best{color:var(--gold);font-weight:700}
+.anom{cursor:help;border-bottom:1px dotted var(--mut)}
+.note{font-size:12px;color:var(--mut);margin:8px 0}
+.legend span{display:inline-block;font-size:12px;color:var(--mut);margin-right:14px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:middle}
+#loading{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:99;color:var(--mut);gap:14px}
+.spinner{width:38px;height:38px;border:3px solid var(--line);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loading .t{font-size:14px;animation:fade 1.4s ease-in-out infinite}
+@keyframes fade{0%,100%{opacity:.4}50%{opacity:1}}
+.toast{position:fixed;left:50%;bottom:32px;transform:translateX(-50%);background:#000;color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;z-index:120;opacity:0;transition:opacity .25s;pointer-events:none}
+.toast.show{opacity:.95}
+#totop{position:fixed;right:18px;bottom:18px;width:42px;height:42px;border-radius:50%;background:var(--card);color:var(--txt);border:1px solid var(--line);font-size:18px;cursor:pointer;display:none;z-index:80;box-shadow:0 4px 12px var(--sh-dark)}
+#totop:hover{border-color:var(--gold)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px;box-shadow:0 2px 8px var(--sh-dark)}
+.panel-h{font-size:14px;font-weight:700;margin-bottom:10px;color:var(--txt)}
+.ctl{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.ctl label{font-size:13px;color:var(--mut)}
+.ctl input[type=range]{width:220px;accent-color:var(--gold)}
+.ctl select{background:var(--bg);color:var(--txt);border:1px solid var(--line);border-radius:6px;padding:5px 8px;font-size:13px}
+.ctl .val{font-weight:700;color:var(--gold);min-width:42px;display:inline-block}
+.row2{display:flex;gap:10px;flex-wrap:wrap}
+.statbox{flex:1;min-width:120px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.statbox .v{font-size:18px;font-weight:700}
+.statbox .l{font-size:11px;color:var(--mut);margin-top:2px}
+.inline{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0}
+.inline input[type=text]{flex:1;min-width:160px;background:var(--bg);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:13px}
+.cfg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.cfg{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px;transition:transform .15s ease,box-shadow .15s ease}
+.cfg:hover{transform:translateY(-2px);box-shadow:0 6px 16px var(--sh-dark)}
+.cfg .w{font-size:22px;font-weight:800;line-height:1.1}
+.cfg .n{font-size:13px;font-weight:600;margin-top:3px}
+.cfg .r{font-size:11px;color:var(--mut);margin-top:5px;line-height:1.55}
+body.light{--bg:#f4f6f9;--card:#ffffff;--line:#e3e6ec;--txt:#1a1d23;--mut:#6b7280;--gold:#b8860b;--blue:#2f6fde;--green:#1f9d63;--red:#d23b3b;--purple:#7a4fd0;--c-cash:#6b7280;
+  --sh-dark:rgba(0,0,0,.08);--sh-light:rgba(0,0,0,.05)}
+body.light .sig .box{background:#eef1f5}
+body.light .cfg{background:#eef1f5}
+body.light #swtbl tbody tr:nth-child(even){background:rgba(0,0,0,.03)}
+body.light #swtbl tbody tr:hover{background:rgba(47,111,222,.10)}
+body.light #ann tbl tbody tr:nth-child(even),body.light #cmp tbody tr:nth-child(even){background:rgba(0,0,0,.02)}
+body.light .kpi[data-tip]:hover::after{background:#222;color:#fff}
+.risk{font-size:11px;color:var(--mut);text-align:center;margin-top:8px;line-height:1.6}
+</style></head>
+<body><div id="loading"><div class="spinner"></div><div class="t">正在加载回测数据…</div></div><div class="wrap">
+<header class="topbar"><h1>永久资产配置策略</h1>
+<div class="toolbar">
+  <a class="btn" href="wiki4a.html" style="text-decoration:none">📖 策略Wiki</a>
+  <button class="btn" id="themeBtn">☀️ 亮色</button>
+</div></header>
+<div class="sub" id="subline"></div>
+
+<!-- ① 策略配置概况 -->
+<div class="card"><div class="card-h"><h2 title="五大子仓目标权重与角色定位，每月末再平衡复位至目标权重">策略配置概况</h2></div>
+<div class="cfg-grid" id="cfg"></div>
+<div class="note" id="cfgnote"></div></div>
+
+<div class="kpis" id="kpis"></div>
+
+<!-- ② 当前信号 -->
+<div class="card"><div class="card-h"><h2 title="基于最新 20 日动量与 40 日趋势给出的次交易日动作（双状态）">当前信号 · 次交易日动作</h2>
+  <button class="mini" id="copySig">📋 复制信号</button></div>
+<div id="signal"></div><div class="note" id="sigrule"></div></div>
+
+<!-- ④ 组合净值走势 -->
+<div class="card"><div class="card-h"><h2 title="组合自 100 万起步，按各仓权重与再平衡规则滚动至最新净值的走势">组合净值走势（100 万 → 最新）</h2>
+  <div class="chart-tools"><button class="mini" id="eqScale">对数</button><button class="mini" data-fs="eq">⛶ 全屏</button><button class="mini" data-reset="eq">重置缩放</button></div></div>
+<div class="chart"><canvas id="eq"></canvas></div>
+<div class="legend" style="margin-top:8px"><span><i class="dot" style="background:var(--gold)"></i>组合净值</span></div>
+<div class="note" style="margin-top:6px">100 万起步 · 全收益口径 · 未计管理费与跟踪误差（实盘通常低于回测）。</div></div>
+
+<div class="grid2">
+  <div class="card"><div class="card-h"><h2 title="组合相对历史高点的回撤（水下曲线），0 轴为盈亏分界">回撤（水下曲线）</h2>
+    <div class="chart-tools"><button class="mini" data-fs="dd">⛶</button><button class="mini" data-reset="dd">重置缩放</button></div></div>
+  <div class="chart"><canvas id="dd"></canvas></div></div>
+  <div class="card"><div class="card-h"><h2 title="30% 轮动仓每日持有的标的：国证成长100R 或 国证价值100R 全收益（仅展示最近一年）">30% 轮动仓：成长 / 价值 持仓轨迹（最近一年）</h2>
+    <div class="chart-tools"><button class="mini" data-fs="rot">⛶</button><button class="mini" data-reset="rot">重置缩放</button></div></div>
+  <div class="chart"><canvas id="rot"></canvas></div>
+  <div class="legend" style="margin-top:8px">
+    <span><i class="dot" style="background:var(--blue)"></i>持有成长100R</span>
+    <span><i class="dot" style="background:var(--gold)"></i>持有价值100R</span>
+    <span><i class="dot" style="background:var(--red)"></i>调仓节点</span>
+  </div>
+  <div class="note" id="switchcnt"></div></div>
+</div>
+
+<!-- ③ 历年收益率 -->
+<div class="card" id="ann"><div class="card-h"><h2 title="按自然年拆分的组合收益与当年最大回撤，验证穿越牛熊的稳定性">历年收益率</h2></div>
+<table><thead><tr><th>年份</th><th>收益%</th><th>当年最大回撤%</th></tr></thead><tbody id="annb"></tbody></table>
+<div class="note">12 个完整年度中 10 年正收益（仅 2018 / 2022 为负），2014 为建仓首日；年年有涨跌属正常，长跑看复利。</div></div>
+
+<!-- 对比基准 -->
+<div class="card"><div class="card-h"><h2 title="本策略与单一标的买入持有、以及无轮动静态组合的历史表现对比">对比：本策略 vs 各纯标的 / 无轮动</h2></div>
+<table id="cmp"><thead><tr><th>方案</th><th>总收益%</th><th>年化%</th><th>最大回撤%</th><th>夏普</th></tr></thead>
+<tbody></tbody></table>
+<div class="note">对比均在相同窗口（<span id="cmpwin"></span>）内；"静态无轮动"=30%仓 50/50 持有成长+价值但不调仓；"本策略(无趋势过滤)"为旧口径（无双弱持币、无纳指过滤），用于直观对比过滤带来的改善。金色高亮=该列最优。</div></div>
+
+<div class="note" style="text-align:center;margin-top:6px">策略介绍 · 执行方法 · 执行纪律 · 心理按摩 及 全量调仓明细（126 条）→ <a href="wiki4a.html">📖 策略Wiki</a></div>
+<div class="risk">本数据为历史回测结果，不代表未来收益，投资有风险，入市需谨慎。</div>
+</div>
+<button id="totop" title="回到顶部">↑</button>
+<div class="toast" id="toast"></div>
+
+<script>
+const DATA = __DATA__;
+const EXTRA = __EXTRA__;
+
+// ===== 数据守卫 =====
+if(typeof DATA==='undefined'||!DATA||!DATA.stats){document.body.innerHTML='<div style="padding:40px;color:#8a93a3">回测数据加载失败，请检查数据源</div>';throw new Error('缺少 DATA 回测数据');}
+
+// ===== 格式化 =====
+const fmt=(x,d=2)=>{if(x==null||isNaN(x)||!isFinite(x))return '—';return Number(x).toLocaleString('zh-CN',{maximumFractionDigits:d,minimumFractionDigits:d});};
+const pct=(x)=>(x>=0?'+':'')+fmt(x)+'%';
+const cls=(x)=>x>=0?'pos':'neg';
+const cssv=(n)=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const C={eq:cssv('--gold'),dd:cssv('--red'),rot:cssv('--purple'),rotlong:cssv('--green'),cash:cssv('--c-cash'),excess:cssv('--c-excess')};
+const iso=s=>String(s).replace(/(\d{4})(\d{2})(\d{2})/,'$1-$2-$3');
+const align=(dates,arr)=>{const n=Math.min(dates.length,arr.length);if(dates.length!==arr.length)console.warn('[align] 长度不一致',dates.length,arr.length,'截断至',n);return {dates:dates.slice(0,n),arr:arr.slice(0,n)};};
+const CHARTS={};
+const makeChart=(id,cfg)=>{try{if(CHARTS[id])CHARTS[id].destroy();const ch=new Chart(document.getElementById(id).getContext('2d'),cfg);CHARTS[id]=ch;return ch;}catch(e){console.error('图表渲染失败 '+id,e);return null;}};
+window.addEventListener('beforeunload',()=>{Object.values(CHARTS).forEach(c=>c&&c.destroy());});
+const toast=(msg)=>{const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1600);};
+const nearestIdx=(datesArr,target)=>{let lo=0,hi=datesArr.length-1;while(lo<hi){const mid=(lo+hi)>>1;if(datesArr[mid]<target)lo=mid+1;else hi=mid;}return lo;};
+
+// ===== 副标题（25：拆两行）=====
+document.getElementById('subline').innerHTML=
+ `<div class="l1">数据窗口 ${DATA.meta.start} ~ ${DATA.meta.end}（${DATA.meta.n_days} 个交易日）</div>`+
+ `<div class="l2">双弱持币 ｜ 纳指40日过滤 ｜ 月度再平衡 ｜ 生成 ${DATA.meta.generated}</div>`;
+
+// ===== KPI 渲染 =====
+const TIPS={'总收益':'策略期内累计涨幅（含再平衡与轮动）','年化':'折算到每年的复合收益率','最大回撤':'历史上从最高点的最大下跌幅度，越小越好','年化波动':'收益的年化标准差，衡量风险水平','夏普':'每承担一单位波动获得的超额收益，越高越好'};
+function renderKPI(s){
+  const arr=[['总收益',pct(s.total),cls(s.total)],['年化',pct(s.cagr),cls(s.cagr)],['最大回撤',pct(s.mdd),'neg'],['年化波动',fmt(s.vol)+'%','neu'],['夏普',fmt(s.sharpe),'neu']];
+  document.getElementById('kpis').innerHTML=arr.map(k=>`<div class="kpi" data-tip="${TIPS[k[0]]}"><div class="v ${k[2]}">${k[1]}</div><div class="l">${k[0]}</div></div>`).join('');
+}
+
+// ===== 图表 =====
+let EQ_LOG=false; // 净值图坐标：默认线性，可切换对数
+const wd=ms=>'周'+'日一二三四五六'[new Date(ms).getDay()];
+const tipTitle=items=>{const t=items[0];return t.label+(t.parsed.x!=null?' '+wd(t.parsed.x):'');};
+const xGridYear=ctx=>{const v=ctx.tick&&ctx.tick.value;if(v==null)return '#2a2f3a';return new Date(v).getMonth()===0?'rgba(227,179,65,.5)':'#2a2f3a';};
+function renderCharts(R){
+  // 净值
+  const eqA=align(R.eqDates,R.eqCurve);
+  const eqY=EQ_LOG?{type:'logarithmic',ticks:{color:'#8a93a3',callback:v=>v>=1000000?(v/10000).toFixed(0)+'万':v},grid:{color:'#2a2f3a'}}:{ticks:{color:'#8a93a3',callback:v=>v>=1000000?(v/10000).toFixed(0)+'万':v},grid:{color:'#2a2f3a'}};
+  makeChart('eq',{type:'line',data:{labels:eqA.dates.map(iso),datasets:[{label:'组合净值',data:eqA.arr,borderColor:C.eq,backgroundColor:'rgba(227,179,65,.10)',fill:true,pointRadius:0,borderWidth:2}]},
+    options:{plugins:{legend:{display:false},tooltip:{title:tipTitle,callbacks:{label:c=>'净值 '+fmt(c.parsed.y)}}},scales:{x:{type:'time',ticks:{maxTicksLimit:10,maxRotation:0,color:'#8a93a3'},grid:{color:xGridYear}},y:eqY},
+      zoom:{zoom:{wheel:{enabled:true},drag:{enabled:true},mode:'x'},pan:{enabled:true,mode:'x'}}}});
+  // 回撤 + 0 轴 + 最大回撤标注
+  const eq=R.eqCurve,peakArr=[eq[0]];let pk=eq[0];const dd=[];
+  for(const v of eq){if(v>pk)pk=v;dd.push((v/pk-1)*100);peakArr.push(pk);}
+  const ddA=align(R.eqDates,dd);
+  let mi=0;for(let i=1;i<dd.length;i++)if(dd[i]<dd[mi])mi=i;
+  const mddPts=[{x:iso(ddA.dates[mi]),y:dd[mi]}];
+  makeChart('dd',{type:'line',data:{labels:ddA.dates.map(iso),datasets:[
+    {label:'回撤',data:ddA.arr,borderColor:C.dd,backgroundColor:'rgba(255,107,107,.12)',fill:true,pointRadius:0,borderWidth:1.5},
+    {label:'0 基准',data:ddA.dates.map(()=>0),borderColor:'rgba(138,147,163,.7)',borderDash:[5,4],pointRadius:0,borderWidth:1,fill:false},
+    {label:'最大回撤',type:'scatter',data:mddPts,pointRadius:5,pointBackgroundColor:C.dd,borderColor:'#fff',borderWidth:1.5,showLine:false,
+      tooltip:{callbacks:{label:c=>'历史最大回撤 '+fmt(c.parsed.y)+'%（'+c.raw.x+'）'}}}]},
+    options:{plugins:{legend:{display:false},tooltip:{title:tipTitle,callbacks:{label:c=>c.datasetIndex===0?('回撤 '+fmt(c.parsed.y)+'%'):(c.datasetIndex===1?'盈亏分界 0':null)}}},scales:{x:{type:'time',ticks:{maxTicksLimit:10,maxRotation:0,color:'#8a93a3'},grid:{color:xGridYear}},y:{ticks:{color:'#8a93a3',callback:v=>v+'%'},grid:{color:'#2a2f3a'}}},
+      zoom:{zoom:{wheel:{enabled:true},drag:{enabled:true},mode:'x'},pan:{enabled:true,mode:'x'}}}});
+  // 轮动持仓 + 调仓节点（仅展示最近一年；1=成长 0.5=持币 0=价值）
+  const hcolAll=R.rotHold.map(h=>h==='growth'?1:h==='value'?0:0.5);
+  const dtsAll=R.rotDates;
+  const lastD=dtsAll[dtsAll.length-1];
+  const cD=new Date(+lastD.slice(0,4),+lastD.slice(4,6)-1,+lastD.slice(6,8)-365);
+  const cut=String(cD.getFullYear())+String(cD.getMonth()+1).padStart(2,'0')+String(cD.getDate()).padStart(2,'0');
+  let i0=dtsAll.findIndex(d=>d>=cut);if(i0<0)i0=0;
+  const dts=dtsAll.slice(i0),hcol=hcolAll.slice(i0);
+  const hmin=Math.min.apply(null,hcol)-0.1,hmax=Math.max.apply(null,hcol)+0.1;
+  const rotA=align(dts,hcol);
+  const dirName=f=>f==='value'?'价值':f==='growth'?'成长':'持币';
+  // 持仓持续天数（近似：抽稀点数×步长）
+  const stepN=Math.max(1,Math.round(DATA.meta.n_days/dtsAll.length));
+  const runD=hcol.map((v,i)=>{let n=1;for(let j=i-1;j>=0&&hcol[j]===v;j--)n++;return n*stepN;});
+  const pts=R.switches.filter(sw=>sw.d>=cut).map(sw=>{const i=nearestIdx(dts,sw.d);return {x:iso(dts[i]),y:hcol[i],d:sw.d,dir:dirName(sw.from)+'→'+dirName(sw.to)};});
+  makeChart('rot',{type:'line',data:{labels:rotA.dates.map(iso),datasets:[
+    {label:'持仓',data:rotA.arr,stepped:true,borderColor:C.rot,backgroundColor:'rgba(176,124,255,.10)',fill:true,pointRadius:0,borderWidth:1.5},
+    {label:'调仓节点',type:'scatter',data:pts,pointRadius:4,pointBackgroundColor:C.dd,borderColor:'#fff',showLine:false,
+      tooltip:{callbacks:{label:c=>c.raw.dir+'（'+c.raw.d+'）'}}}]},
+    options:{plugins:{legend:{display:false},tooltip:{title:tipTitle,callbacks:{label:c=>c.dataset.type==='scatter'?('调仓：'+c.raw.dir+' ('+c.raw.d+')'):(c.parsed.y>0.75?('持有：成长100R（约'+runD[c.dataIndex]+' 个交易日）'):(c.parsed.y>0.25?('轮动仓持币(货币)（约'+runD[c.dataIndex]+' 个交易日）'):('持有：价值100R（约'+runD[c.dataIndex]+' 个交易日）')))}}},
+      scales:{x:{type:'time',ticks:{maxTicksLimit:10,maxRotation:0,color:'#8a93a3'},grid:{color:xGridYear}},y:{min:hmin,max:hmax,ticks:{color:'#8a93a3',callback:v=>v>0.75?'成长100R':(v>0.25?'持币':'价值100R')},grid:{color:'#2a2f3a'}}},
+      zoom:{zoom:{wheel:{enabled:true},drag:{enabled:true},mode:'x'},pan:{enabled:true,mode:'x'}}}});
+}
+// 净值图对数/线性切换
+document.getElementById('eqScale').addEventListener('click',()=>{EQ_LOG=!EQ_LOG;document.getElementById('eqScale').textContent=EQ_LOG?'线性':'对数';if(CURRENT)renderCharts(CURRENT);toast('净值图已切换为'+(EQ_LOG?'对数':'线性')+'坐标');});
+
+// ===== 信号（双状态 + 数值判定链 + 复制 + 提醒条）=====
+function renderSignal(){
+  const c=DATA.current,thr=DATA.meta.thr;
+  const holdTag=c.rotHold==='growth'?'<span class="tag t-grow">成长100R</span>':(c.rotHold==='value'?'<span class="tag t-val">价值100R</span>':'<span class="tag t-cash">持币</span>');
+  const sigCls=c.rotSignal.includes('价值')?'s-val':(c.rotSignal.includes('成长')?'s-grow':'s-hold');
+  const ndxCls=c.ndxSignal==='持有纳指'?'s-grow':'s-hold';
+  // 判定链
+  const dblWeak=c.g20<0&&c.v20<0;
+  const gtVal=c.v20>c.g20+thr,gtGrow=c.g20>c.v20+thr;
+  const rotRule=dblWeak?`双弱触发：成长20日 ${pct(c.g20)} 与 价值20日 ${pct(c.v20)} 均&lt;0 → <span class="no">轮动仓持币</span>`
+    :gtVal?`差值 ${pct(c.diff)} &gt; +${thr}% <span class="ok">✓</span> → 全仓价值`
+    :gtGrow?`差值 ${pct(-c.diff)} &gt; +${thr}% <span class="ok">✓</span> → 全仓成长`
+    :`|差值| ${pct(Math.abs(c.diff))} ≤ ${thr}% → 维持现持仓`;
+  const ndxRule=c.ndxMom<0?`纳指40日动量 ${pct(c.ndxMom)} &lt; 0 <span class="no">✗</span> → 转货币（距收复还差 +${c.ndxRecoverPct}%）`
+    :`纳指40日动量 ${pct(c.ndxMom)} ≥ 0 <span class="ok">✓</span> → 持有纳指`;
+  // 提醒条
+  const banner=(dblWeak||c.ndxMom<0)
+    ?`<div class="sig-banner">⚠ 防守状态：${dblWeak?'轮动仓持币中':'轮动仓正常'} · ${c.ndxMom<0?'纳指仓转货币中':'纳指仓正常'}——规则自动执行，无需手动操作</div>`
+    :`<div class="sig-banner ok">✓ 进攻状态：轮动仓${c.rotSignal.replace('全仓','')} · 纳指仓正常持有</div>`;
+  // 距今天数
+  let daysAgo='—';
+  try{const d0=new Date(+c.date.slice(0,4),+c.date.slice(4,6)-1,+c.date.slice(6,8));daysAgo=Math.max(0,Math.round((new Date()-d0)/86400000))+' 天前';}catch(e){}
+  document.getElementById('signal').innerHTML=banner+
+   `<div class="sig"><div class="box"><div class="l">数据日期</div><div class="v">${c.date}</div></div>`+
+   `<div class="box"><div class="l">轮动仓当前持仓(30%)</div><div class="v">${holdTag}</div></div>`+
+   `<div class="box"><div class="l">轮动仓信号</div><div class="v ${sigCls}">${c.rotSignal}</div></div>`+
+   `<div class="box"><div class="l">纳指仓(30%)</div><div class="v ${ndxCls}">${c.ndxSignal}</div></div></div>`+
+   `<div class="sig" style="margin-top:10px"><div class="box"><div class="l">成长100R 20日</div><div class="v ${cls(c.g20)}">${pct(c.g20)}</div></div>`+
+   `<div class="box"><div class="l">价值100R 20日</div><div class="v ${cls(c.v20)}">${pct(c.v20)}</div></div>`+
+   `<div class="box"><div class="l">差值(价值-成长)</div><div class="v ${cls(c.diff)}">${pct(c.diff)}</div></div>`+
+   `<div class="box"><div class="l">纳指40日动量</div><div class="v ${cls(c.ndxMom)}">${pct(c.ndxMom)}</div></div></div>`+
+   `<div class="sig-rule">${rotRule}<br>${ndxRule}</div>`+
+   `<div class="sig-meta"><span>上次调仓 ${c.lastSwitch||'—'}</span><span>轮动仓已持仓 ${c.holdDays} 天</span><span>再平衡：下月首个交易日</span><span>数据 ${daysAgo}</span></div>`;
+  document.getElementById('sigrule').textContent='收盘出信号，次交易日执行；双弱持币与纳指过滤为自动规则。';
+  const cb=document.getElementById('copySig');
+  if(cb){cb.onclick=()=>{const txt=`永久资产配置 · 信号摘要（${c.date}）\n轮动仓：${c.rotSignal}（成长20日 ${pct(c.g20)} / 价值20日 ${pct(c.v20)} / 差值 ${pct(c.diff)}）\n纳指仓：${c.ndxSignal}（40日动量 ${pct(c.ndxMom)}${c.ndxRecoverPct?'，距收复还差 +'+c.ndxRecoverPct+'%':''}）\n上次调仓：${c.lastSwitch||'—'} ｜ 数据 ${daysAgo}`;
+      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(()=>{cb.textContent='已复制 ✓';setTimeout(()=>cb.textContent='📋 复制信号',1500);}).catch(()=>alert('复制失败，请手动选择'));}else alert('当前环境不支持剪贴板');};}
+}
+
+// ===== 配置概况（首页核心①）=====
+const CFG=[
+  {w:.30,name:'成长×价值 轮动',role:'A股风格进攻 · 弱市持币',desc:'20日动量轮动；两者同时走弱→持币(货币)',color:'var(--purple)'},
+  {w:.30,name:'纳斯达克100',role:'全球科技成长主力',desc:'NDX.GI；跌破40日趋势→转货币',color:'var(--blue)'},
+  {w:.20,name:'A500红利低波',role:'A股高股息防御',desc:'932259.CSI 全收益（实盘可用 159296 ETF）',color:'var(--gold)'},
+  {w:.15,name:'黄金',role:'避险 · 抗通胀',desc:'518880 黄金ETF，与股债低相关',color:'var(--red)'},
+  {w:.05,name:'货币基金',role:'现金缓冲 · 平滑波动',desc:'511880 货基ETF，几乎无波动',color:'var(--c-cash)'}
+];
+function renderConfig(){
+  document.getElementById('cfg').innerHTML=CFG.map(c=>`<div class="cfg"><div class="w" style="color:${c.color}">${Math.round(c.w*100)}%</div><div class="n">${c.name}</div><div class="r">${c.role}<br>${c.desc}</div></div>`).join('');
+  document.getElementById('cfgnote').innerHTML=`数据窗口 ${DATA.meta.start} ~ ${DATA.meta.end}（${DATA.meta.n_days} 个交易日）｜ 轮动阈值 ${DATA.meta.thr}% ｜ 月度再平衡 ｜ 双弱持币+纳指40日过滤 ｜ 共 ${DATA.rotation.switches.length} 次调仓 ｜ 数据更新 ${DATA.meta.generated}`;
+}
+
+// ===== 对比表 + 高亮最优（18）=====
+function renderComparison(stats){
+  const rows=Object.entries(DATA.comparison).map(([k,v])=>({k,...v}));
+  rows.unshift({k:'本策略(轮动)',...stats});
+  const best={total:Math.max(...rows.map(r=>r.total)),cagr:Math.max(...rows.map(r=>r.cagr)),mdd:Math.max(...rows.map(r=>r.mdd)),sharpe:Math.max(...rows.map(r=>r.sharpe))};
+  const me=rows.find(r=>r.k==='本策略(轮动)');
+  const html=rows.map(r=>{
+    const cl=(v,b)=>v===b?'best':cls(v);
+    const w=Math.max(2,Math.round(r.total/best.total*100));
+    const oldCls=r.k.includes('无趋势过滤')?' class="old"':'';
+    return `<tr${oldCls}><td>${r.k}</td>`+
+      `<td class="${r.k==='本策略(轮动)'?'':cl(r.total,best.total)} bar" style="--w:${w}%">${pct(r.total)}</td>`+
+      `<td class="${r.k==='本策略(轮动)'?'':cl(r.cagr,best.cagr)}">${pct(r.cagr)}</td>`+
+      `<td class="neg">${pct(r.mdd)}</td>`+
+      `<td class="${r.k==='本策略(轮动)'?'':cl(r.sharpe,best.sharpe)}">${fmt(r.sharpe)}</td></tr>`;}).join('');
+  document.getElementById('cmp').querySelector('tbody').innerHTML=html;
+  document.getElementById('cmpwin').textContent=`${DATA.meta.start} ~ ${DATA.meta.end}`;
+}
+
+// ===== 年度表（22）+ 迷你条 =====
+function renderAnnual(list){
+  const maxAbs=Math.max(...list.map(a=>Math.abs(a.ret)),0.0001);
+  document.getElementById('annb').innerHTML=list.map(a=>`<tr><td>${a.y}</td><td class="${cls(a.ret)}">${pct(a.ret)}<span class="ann-bar" style="background:${a.ret>=0?'var(--red)':'var(--green)'};width:${Math.max(3,Math.round(Math.abs(a.ret)/maxAbs*42))}px"></span></td><td class="neg">${pct(a.mdd)}</td></tr>`).join('');
+}
+
+// ===== 应用结果 =====
+let CURRENT=null;
+function applyResult(R){
+  CURRENT=R;
+  renderKPI(R.stats);
+  renderCharts(R);
+  renderComparison(R.stats);
+  renderAnnual(R.annual);
+  document.getElementById('switchcnt').textContent=`共 ${R.switches.length} 次调仓（含持币切换），图中仅展示最近一年。`;
+}
+
+// ===== 初始渲染（默认数据）=====
+const DEFAULT_R={
+  stats:DATA.stats,
+  switches:DATA.rotation.switches,
+  eqDates:DATA.equity.dates, eqCurve:DATA.equity.curve,
+  rotDates:DATA.rotation.dates, rotHold:DATA.rotation.hold,
+  excessDates:EXTRA.excess.dates, excessCurve:EXTRA.excess.curve,
+  cashDates:EXTRA.cash.dates, cashCurve:EXTRA.cash.curve,
+  switchStats:EXTRA.switchStats,
+  annual:EXTRA.annual
+};
+renderSignal();renderConfig();
+applyResult(DEFAULT_R);
+
+// ===== 交互：主题切换（默认暗色，跟随系统 + localStorage 记忆）=====
+const themeBtn=document.getElementById('themeBtn');
+function applyTheme(){
+  const light=document.body.classList.contains('light');
+  themeBtn.textContent=light?'🌙 暗色':'☀️ 亮色';
+  try{localStorage.setItem('w4a-home-theme',light?'light':'dark');}catch(e){}
+  setTimeout(()=>{Object.values(CHARTS).forEach(c=>c&&c.update());},50);
+}
+try{
+  const saved=localStorage.getItem('w4a-home-theme');
+  if(saved==='light')document.body.classList.add('light');
+  else if(!saved&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches)document.body.classList.add('light');
+}catch(e){}
+themeBtn.addEventListener('click',()=>{document.body.classList.toggle('light');applyTheme();});
+applyTheme();
+
+// ===== 全屏（14）=====
+document.querySelectorAll('[data-fs]').forEach(b=>b.addEventListener('click',()=>{
+  const el=document.getElementById(b.getAttribute('data-fs')).parentElement;
+  if(el.requestFullscreen)el.requestFullscreen();else if(el.webkitRequestFullscreen)el.webkitRequestFullscreen();}));
+// ===== 重置缩放（9）=====
+document.querySelectorAll('[data-reset]').forEach(b=>b.addEventListener('click',()=>{const c=CHARTS[b.getAttribute('data-reset')];if(c&&c.resetZoom)c.resetZoom();}));
+
+// ===== 置顶（16）=====
+const totop=document.getElementById('totop');
+window.addEventListener('scroll',()=>{totop.style.display=window.scrollY>300?'block':'none';});
+totop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+// ===== 隐藏 loading =====
+const ld=document.getElementById('loading');if(ld)ld.style.display='none';
+</script></body></html>
